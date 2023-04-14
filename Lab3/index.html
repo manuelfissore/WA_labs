@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Film Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="index.css"> 
+    
+    <style>
+      .checked {
+        color: orange;
+      }
+      </style>
+  </head>
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+    <ul class="navbar-nav me-auto">
+      
+        <a class="navbar-brand" href="#">
+          <p class="fw-lighter mt-2 m-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" fill="currentColor" class="bi bi-collection-play-fill" viewBox="0 0 16 16">
+              <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm6.258-6.437a.5.5 0 0 1 .507.013l4 2.5a.5.5 0 0 1 0 .848l-4 2.5A.5.5 0 0 1 6 12V7a.5.5 0 0 1 .258-.437z"/>
+            </svg>
+            Film Library
+          </p>
+        </a>
+     
+    </ul>
+
+    <form class="d-flex ms-5">
+      <input class="form-control me-2" type="text" placeholder="Search">
+      <button class="btn btn-primary" type="button">Search</button>
+    </form>
+
+  </nav>
+
+  <body>
+    <div class="container-fluid mt-3  pt-5">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="d-flex justify-content-center pt-5">
+            <div class="filters">
+              <input class="form-check-input" type="checkbox" id="all" name="all" value="1" checked>
+              <label class="form-check-label">All</label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="filters">
+              <input class="form-check-input" type="checkbox" id="Fav" name="Favorite" value="0">
+              <label class="form-check-label">Favorite</label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="filters">
+              <input class="form-check-input" type="checkbox" id="seen" name="Seen" value="0">
+              <label class="form-check-label">Seen last month</label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="filters">
+              <input class="form-check-input" type="checkbox" id="Unseen" name="Unseen" value="0" >
+              <label class="form-check-label">Unseen</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-8">
+          <div class="container mt-3">
+            <h2>FILMS</h2>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Favorite</th>
+                  <th>Watch Date</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>HP: La pietra filosofale</td>
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="isFav1" name="isFav1" value="1">
+                    </div>
+                  </td>
+                  <td>March 23, 2023</td>
+                  <td>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Le iene</td>
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="isFav1" name="isFav1" value="1" checked>
+                    </div>
+                  </td>
+                  <td>June 14, 2021</td>
+                  <td>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pulp Fiction</td>
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="isFav1" name="isFav1" value="1" checked>
+                    </div>
+                  </td>
+                  <td>March 23, 2023</td>
+                  <td>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex flex-row-reverse">
+            <a href="#" class="text-decoration-none">
+              <i class="fa fa-plus-circle" style="font-size: 3rem; color: rgb(38, 141, 210);"></i>
+            </a>              
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
