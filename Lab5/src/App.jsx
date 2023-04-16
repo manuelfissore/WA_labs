@@ -2,34 +2,34 @@ import { useState } from 'react'
 import './App.css'
 import {Film} from './film'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Navbar } from 'react-bootstrap';
-import { FilmLibrary } from "./Components";
+import { Container} from 'react-bootstrap';
+import { FilmLibrary, NameAndLogo } from "./Components";
+import dayjs, { Dayjs } from 'dayjs';
 
-const films= [{
+const library= [{
     ID:1, 
     Title: "Pulp Fiction",
-    isFavorite: true, 
-    Date:('2023-03-07'),
+    isFavorite:true, 
+    Date: dayjs('2023-02-15'),
     Rating: 4},
         {
     ID:2, 
     Title: "21 Grams",
     isFavorite: true, 
-    Date:('2022-09-22'),
+    Date:dayjs('2023-02-15'),
     Rating: 5},
         {
     ID: 3,
     Title:"Star Wars",
     isFavorite:false,
-    Date: undefined,
+    Date: dayjs('2023-02-15'),
     Rating: 3}
     ];
 
 function App() {
-  const [film, setFilm] = useState({ ID: films.ID, Title: films.Title, isFavorite:films.isFavorite, Date: films.Date, Rating: films.Rating});
+  const [films, setFilm] = useState([ ...library]);
 
   const deleteFilm = (id) => {
-    //  console.log('Deleting answer '+id);    
     setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
   }
 
@@ -39,14 +39,7 @@ function App() {
   return <>
   
   <header>
-    <Navbar sticky="top" variant='dark' bg="primary" expand="lg" className='mb-3'>
-      <Container>
-        <Navbar.Brand>HeapOverrun - Film Library</Navbar.Brand> 
-        <Navbar.Text>
-          Signed in as: Tom
-        </Navbar.Text>
-      </Container>
-    </Navbar>
+    <NameAndLogo/>
   </header>
   <main>
       <Container>

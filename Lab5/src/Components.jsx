@@ -1,4 +1,6 @@
-import { Badge, Button, Col, Form, Row, Table } from "react-bootstrap";
+import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck} from 'react-bootstrap';
+import dayjs from "dayjs";
+import { CameraReelsFill } from "react-bootstrap-icons";
 
 function FilmLibrary(props) {
 
@@ -14,6 +16,23 @@ function FilmLibrary(props) {
 
 }
 
+function NameAndLogo(props) {
+    return <>
+    <Navbar sticky="top" variant='dark' bg="primary" expand="lg" className='mb-1'>
+    <Container>
+        
+        <Navbar.Brand>
+            <CameraReelsFill  color="White" size={40}/>
+            <div className='.me-5'> <span >Film Library</span></div>
+           
+        </Navbar.Brand> 
+    </Container>
+  </Navbar>
+  </>
+}
+
+
+
 function FilmDetails(props) {
     return <>
         <Table hover>
@@ -26,20 +45,42 @@ function FilmDetails(props) {
                 </tr>
             </thead>
             <tbody>
-                {props.films.map(f => <FilmRow key={f.id} film={f} deleteFilm={props.deleteFilm} />)}
+                {props.films.map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm} />)}
             </tbody>
         </Table>
     </>
 }
 
+
 function FilmRow(props) {
     return <tr>
         <td>{props.film.Title}</td>
-        <td>{props.film.isFavorite}</td>
-        <td>{props.film.date.format('DD/MM/YYYY')}</td>
-        <td>{props.film.rating}</td>
-        <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.id)}}>DELETE</Button></td>
+        <td><DisplayFav film={props.film}/> </td>
+        <td>{props.film.Date.format('YYYY/MM/DD')}</td>
+        <td>{props.film.Rating}</td>
+        <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>DELETE</Button></td>
     </tr>
 }
 
-export { FilmLibrary };
+function DisplayFav(props){
+    
+    if(props.film.isFavorite){
+        return (<>
+            <Form.Group controlId="formBasicCheckBox">
+                <Form.Check type="checkbox" disabled defaultChecked/>
+            </Form.Group>
+        </>
+    )}
+    else{
+        return (<>
+            <Form.Group controlId="formBasicCheckBox">
+                <Form.Check type="checkbox" disabled/>
+            </Form.Group>
+        </>
+        
+    )}
+}  
+
+
+
+export { FilmLibrary, NameAndLogo };
