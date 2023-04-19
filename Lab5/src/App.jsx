@@ -2,8 +2,8 @@ import { useState } from 'react'
 import './App.css'
 import {Film} from './film'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container} from 'react-bootstrap';
-import { FilmLibrary, NameAndLogo } from "./Components";
+import { Container, Col, Row} from 'react-bootstrap';
+import { FilmLibrary, NameAndLogo, Filters } from "./Components";
 import dayjs, { Dayjs } from 'dayjs';
 
 const library= [{
@@ -28,9 +28,14 @@ const library= [{
 
 function App() {
   const [films, setFilm] = useState([ ...library]);
+  const [mode, setMode] = useState('All');
 
   const deleteFilm = (id) => {
     setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
+  }
+
+  const modifyMode = (m) => {
+    setMode(m); 
   }
 
   const actions = {deleteFilm: deleteFilm}
@@ -42,10 +47,13 @@ function App() {
     <NameAndLogo/>
   </header>
   <main>
-      <Container>
-        <FilmLibrary films={films} deleteFilm={deleteFilm} />
-      </Container>
-    </main>
+    <Container>
+      <Row>
+        <Col sm={4}><Filters modifyMode={modifyMode}/></Col>
+        <Col sm={8}><FilmLibrary films={films} mode={mode} deleteFilm={deleteFilm} modifyMode={modifyMode} /></Col>
+      </Row>
+    </Container>
+  </main>
 </>
 }
 
