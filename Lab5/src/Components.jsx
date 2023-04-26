@@ -5,12 +5,11 @@ import { CameraReelsFill, StarFill, Star, Trash} from "react-bootstrap-icons";
 import { MDBRadio } from 'mdb-react-ui-kit';
 
 function FilmLibrary(props) {
-
-    const films =[...props.films];
-    
-    if (films) {
+    if (props.films) {
+        console.log("FilmLibrary, props.film belove")
+        console.log(props.films);
         return (<>
-            <FilmDetails films={films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters}/>
+            <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters} filters={props.filters}/>
         </>)
     } else {
         return <div>"Film undefined"</div>
@@ -24,10 +23,10 @@ function Filters(props) {
     return (<>
             <div>
                 <MDBRadio type="radio" id='All' name='group1' defaultChecked label='All' onChange={()=>{props.activeState('filter_all')}}/>
-                <MDBRadio type="radio" id='Fav' name='group1'  label='Favorite' onChange={()=>{props.activeState('fav')}}/>
-                <MDBRadio type="radio" id='BR' name='group1' label='Best Rated'onChange={()=>{props.activeState('bestRated')}}/>
-                <MDBRadio type="radio" id='RecentSeen' name='group1'  label='Seen Last Month' onChange={()=>{props.activeState('recentSeen')}}/>
-                <MDBRadio type="radio" id='Unseen' name='group1' label='Unseen' onChange={()=>{props.activeState('unseen')}}/>
+                <MDBRadio type="radio" id='Fav' name='group1'  label='Favorite' onChange={()=>{props.activeState('filter_favorite')}}/>
+                <MDBRadio type="radio" id='BR' name='group1' label='Best Rated'onChange={()=>{props.activeState('filter_bestRated')}}/>
+                <MDBRadio type="radio" id='RecentSeen' name='group1'  label='Seen Last Month' onChange={()=>{props.activeState('filter_recentlySeen')}}/>
+                <MDBRadio type="radio" id='Unseen' name='group1' label='Unseen' onChange={()=>{props.activeState('filter_unseen')}}/>
             </div>
     </>
     )
@@ -62,7 +61,7 @@ function FilmDetails(props) {
                 </tr>
             </thead>
             <tbody>
-                {props.films.map(f => <FilmFiltered key={f.ID} film={f} deleteFilm={props.deleteFilm} activeFilter={props.activeFilter}/>)}
+                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters}/>
             </tbody>
         </Table>
     </>
@@ -71,18 +70,29 @@ function FilmDetails(props) {
 
 function FilmFiltered(props) {
     const date = dayjs();
+    /*
     if(props.activeFilter==='filter_all' || (props.activeFilter==='fav' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
         (props.activeFilter==='recentSeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
         return (<><FilmRow film={props.film} deleteFilm={props.deleteFilm}/></>)
+    */
+    console.log("FilmFiltered,copy belove")
+    console.log(props.filters[props.activeFilter].filteredFilms());
+    console.log(props.activeFilter)
+    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm}/>)}</>
 }
+
 function FilmRow(props){
-    return <tr>
-    <td>{props.film.Title}</td>
-    <td><DisplayFav film={props.film}/> </td>
-    <td>{(props.film.Date!='undefined')?props.film.Date.format('YYYY/MM/DD'):''}</td>
-    <td>{<RatingStar film={props.film}/>}</td>
-    <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
-</tr>
+    console.log("FilmRow, film by film by copy belove")
+    console.log(props.film);
+    return (<>
+    <tr>
+        <td>{props.film.Title}</td>
+        <td><DisplayFav film={props.film}/> </td>
+        <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
+        <td>{<RatingStar film={props.film}/>}</td>
+        <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
+    </tr>
+    </>)
 }
 
 function DisplayFav(props){

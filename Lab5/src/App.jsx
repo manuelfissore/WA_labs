@@ -26,26 +26,30 @@ const library= [{
     Rating: 3}
     ];
 
+let l=[...library];
 function App() {
   const [films, setFilm] = useState([...library])
   const [activeFilters, setActiveFilters] = useState('filter_all');
 
-  const recentlySeen = (d) =>{
-    const date=dayjs();
-    if (date.diff(d, 'month')<1)
-      return true;
-    else return false;
-  }
+
   const filters = {
-    filter_all : {label:"filter-all", id:"all", funcion: {}},
-    filter_favorite : {label:"filter-fav", id:"fav", function: function(){films.filter(film=>film.isFavorite==true)}},
-    filter_bestRated : {label:"filter-br", id:"bestRated", function: function(){films.filter(film=>film.Rating==5)}},
-    filter_recentlySeen : {label:"filter-rs", id:"recentlySeen", function:function(){films.filter(film=>films.recentlySeen(film.Date))}},
-    filter_unseen:{label:"filter-unseen", id:"unseen", function:function(){films.filter(film=>films.Date=='undefined')}}
+    filter_all : {label:"filter-all", id:"all", filteredFilms: function() {return l}},
+    filter_favorite : {label:"filter-fav", id:"fav", filteredFilms: function(){ return l.filter(film=>film.isFavorite==true)}},
+    filter_bestRated : {label:"filter-br", id:"bestRated", filteredFilms: function(){return l.filter(film=>film.Rating==5)}},
+    filter_recentlySeen : {label:"filter-rs", id:"recentlySeen", filteredFilms:function(){return l.filter(recentlySeen)}},
+    filter_unseen:{label:"filter-unseen", id:"unseen", filteredFilms: function(){return l.filter(film=>films.Date=='undefined')}}
+  }
+
+  const recentlySeen = (f) =>{
+    const date=dayjs();
+    if (f.Date!='undefined' && date.diff(f.Date, 'month')<1)
+      return f;
+    else return false;
   }
 
   const deleteFilm = (id) => {
     setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
+    l=films;
   }
 
   const activeState = (m) => {
@@ -64,7 +68,7 @@ function App() {
     <Container>
       <Row>
         <Col sm={4}><Filters activeState={activeState}/></Col>
-        <Col sm={8}><FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm}/></Col>
+        <Col sm={8}><FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters}/></Col>
       </Row>
     </Container>
   </main>
