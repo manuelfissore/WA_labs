@@ -4,11 +4,11 @@ import {React} from 'react'
 import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck } from 'react-bootstrap';
 
 
-function NewFilmForm(props) {
-    const [name, setName] = useState('');
-    const [favorite, setFavorite] = useState(false);
-    const [rating, setRating] = useState(0);
-    const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
+function EditOrNewFilm(props) {
+    const [name, setName] = useState((props.addNewOrEdit=='edit')?props.film.Title:'');
+    const [favorite, setFavorite] = useState((props.addNewOrEdit=='edit')?props.film.isFavorite:false);
+    const [rating, setRating] = useState((props.addNewOrEdit=='edit')?props.film.Rating:0);
+    const [date, setDate] = useState((props.addNewOrEdit=='edit')?props.film.Date:dayjs().format('YYYY-MM-DD'));
 
     return <table>
         <tbody>
@@ -39,11 +39,11 @@ function NewFilmForm(props) {
                 
                 <td><Form.Group controlId="addButton">
                     <Form.Label className='fw-light'>&nbsp;</Form.Label><br />
-                    <Button variant='success' id="addbutton" onClick={() => {props.changeAddMode('false'); props.handleAdd(name, favorite, date, rating)}}>ADD</Button>
+                    <Button variant='success' id="addbutton" onClick={() => {(props.addNewOrEdit==edit)?props.handleSave(name, favorite, date, rating):props.handleAdd(name, favorite, date, rating);props.setAddNewOrEdit('false')}}>ADD</Button>
                 </Form.Group>
                 </td>
             </tr>
         </tbody>
     </table>
 }
-export {NewFilmForm}
+export {EditOrNewFilm}

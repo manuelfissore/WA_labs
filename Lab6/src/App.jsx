@@ -29,7 +29,7 @@ const library= [{
 
 function App() {
   const [films, setFilm] = useState([...library])
-  const [addNew, setAddNew] = useState('false')
+  const [addNewOrEdit, setaddNewOrEdit] = useState('false')
   const [activeFilters, setActiveFilters] = useState('filter_all');
 
 
@@ -56,8 +56,8 @@ function App() {
     setActiveFilters(m); 
   }
 
-  function changeAddMode(m){
-    setAddNew(m); 
+  function changeAddEditMode(m){
+    setaddNewOrEdit(m); 
   }
 
   function handleAdd(title, isFavorite, Date, Rating) {
@@ -66,6 +66,11 @@ function App() {
       const newFilm = new Film(newId, title, isFavorite, Date, Rating);
       return [...oldFilms, newFilm];
     });
+  }
+  function handleSave(id, title, isFavorite, Date, Rating){
+    setFilm((oldFilms) => (
+      oldFilms.map((f)=>(f.ID===id?new Film(f.ID, title, isFavorite, Date, Rating):f))
+    ));
   }
 
   return <>
@@ -78,8 +83,8 @@ function App() {
       <Row>
         <Col sm={4}><Filters activeState={activeState}/></Col>
         <Col sm={8}>
-          <FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters}/>
-          <AddFilm addNew={addNew} changeAddMode={changeAddMode} handleAdd={handleAdd}/>
+          <FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters} addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleSave={handleSave}/>
+          <AddFilm addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleAdd={handleAdd}/>
         </Col>
       </Row>
     </Container>

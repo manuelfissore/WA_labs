@@ -1,16 +1,17 @@
 import {React} from 'react'
 import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck } from 'react-bootstrap';
 import dayjs from "dayjs";
-import { CameraReelsFill, StarFill, Star, Trash} from "react-bootstrap-icons";
+import { CameraReelsFill, StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
 import { MDBRadio } from 'mdb-react-ui-kit';
-import { NewFilmForm } from './AnswerForm';
+import { EditOrNewFilm } from './AnswerForm';
 
 function FilmLibrary(props) {
+    
     if (props.films) {
         console.log("FilmLibrary, props.film belove")
         console.log(props.films);
         return (<>
-            <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters} filters={props.filters}/>
+            <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters} filters={props.filters}  handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>
         </>)
     } else {
         return <div>"Film undefined"</div>
@@ -62,7 +63,7 @@ function FilmDetails(props) {
                 </tr>
             </thead>
             <tbody>
-                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters}/>
+                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters} handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>
             </tbody>
         </Table>
     </>
@@ -71,20 +72,27 @@ function FilmDetails(props) {
 
 function FilmFiltered(props) {
     const date = dayjs();
-    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm}/>)}</>
+    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm} handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>)}</>
 }
+
+
+function handleEdit(film, props){
+    props.changeAddEditMode('edit');
+    return (<><EditOrNewFilm film={film} addNewOrEdit={props.addNewOrEdit} setaddNewOrEdit={props.setaddNewOrEdit} handleSave={props.handleSave} /></>)
+} 
 
 function FilmRow(props){
     console.log("FilmRow, film by film by copy belove")
     console.log(props.film);
     return (<>
-    <tr>
-        <td>{props.film.Title}</td>
-        <td><DisplayFav film={props.film}/> </td>
-        <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
-        <td>{<RatingStar film={props.film}/>}</td>
-        <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
-    </tr>
+        <tr>
+            <td>{props.film.Title}</td>
+            <td><DisplayFav film={props.film}/> </td>
+            <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
+            <td>{<RatingStar film={props.film}/>}</td>
+            <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
+            <td><Button variant='primary' onClick={()=>{handleEdit(props.film, props)}}>{<PencilSquare/>}</Button></td>
+        </tr>
     </>)
 }
 
@@ -161,14 +169,14 @@ function RatingStar(props){
 }
 
 function AddFilm(props){
-    if(props.addNew=='false')
-        return (<><Button variant="primary" onClick={() => props.changeAddMode('add')}> Add a new film</Button> </>)
-    if(props.addNew=='add')
+    if(props.addNewOrEdit=='false')
+        return (<><Button variant="primary" onClick={() => props.changeAddEditMode('add')}> Add a new film</Button> </>)
+    if(props.addNewOrEdit=='add')
     return (<>
-        <NewFilmForm changeAddMode={props.changeAddMode} handleAdd={props.handleAdd}></NewFilmForm>
+        <EditOrNewFilm setaddNewOrEdit={props.setaddNewOrEdit} handleAdd={props.handleAdd}/>
         </>)
        
     
 }
 
-export { FilmLibrary, NameAndLogo, Filters, AddFilm };
+export { FilmLibrary, NameAndLogo, Filters, AddFilm};
