@@ -69,8 +69,8 @@ function App() {
   }
   function handleSave(id, title, isFavorite, Date, Rating){
     setFilm((oldFilms) => (
-      oldFilms.map((f)=>(f.ID===id?new Film(f.ID, title, isFavorite, Date, Rating):f))
-    )); 
+      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
+    ));
   }
 
   return <>
