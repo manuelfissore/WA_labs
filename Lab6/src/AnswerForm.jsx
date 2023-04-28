@@ -10,6 +10,16 @@ function EditOrNewFilm(props) {
     const [rating, setRating] = useState((props.addNewOrEdit=='edit')?props.film.Rating:0);
     const [date, setDate] = useState((props.addNewOrEdit=='edit')?props.film.Date:dayjs().format('YYYY-MM-DD'));
 
+    function handleAdd(){
+        props.changeAddEditMode('false')
+        props.handleAdd(name, favorite, date, rating);
+    }
+
+    function handleSave(){
+        props.changeAddEditMode('false')
+        props.handleSave(name, favorite, date, rating);
+    }
+
     return <table>
         <tbody>
             <tr>
@@ -39,11 +49,15 @@ function EditOrNewFilm(props) {
                 
                 <td><Form.Group controlId="addButton">
                     <Form.Label className='fw-light'>&nbsp;</Form.Label><br />
-                    <Button variant='success' id="addbutton" onClick={() => {(props.addNewOrEdit==edit)?props.handleSave(name, favorite, date, rating):props.handleAdd(name, favorite, date, rating);props.setAddNewOrEdit('false')}}>ADD</Button>
+                    {console.log(props.addNewOrEdit)}
+                    {props.addNewOrEdit=='add' && <Button variant='success' id="addbutton" onClick={handleAdd}>ADD</Button>}
+                    {props.addNewOrEdit=='edit' && <Button variant='success' id="addbutton" onClick={handleSave}>SAVE</Button>}
+                    {' '}<Button variant='secondary' id="addbutton" onClick={props.handleCancel}>CANCEL</Button>
                 </Form.Group>
                 </td>
             </tr>
         </tbody>
     </table>
 }
+
 export {EditOrNewFilm}

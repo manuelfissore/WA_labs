@@ -1,4 +1,4 @@
-import {React} from 'react'
+import {React, useState} from 'react'
 import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck } from 'react-bootstrap';
 import dayjs from "dayjs";
 import { CameraReelsFill, StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
@@ -6,15 +6,14 @@ import { MDBRadio } from 'mdb-react-ui-kit';
 import { EditOrNewFilm } from './AnswerForm';
 
 function FilmLibrary(props) {
+    const[filmToEdit, setFilmToEdit] = useState(null);
     
     if (props.films) {
-        console.log("FilmLibrary, props.film belove")
-        console.log(props.films);
         return (<>
-            <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters} filters={props.filters}  handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>
+        <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={props.activeFilters} filters={props.filters}  changeAddEditMode={props.changeAddEditMode} setFilmToEdit={setFilmToEdit} />
+        {props.addNewOrEdit=='add' &&  <EditOrNewFilm addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleAdd={props.handleAdd}/>}
+        {props.addNewOrEdit=='edit' && <EditOrNewFilm film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>}
         </>)
-    } else {
-        return <div>"Film undefined"</div>
     }
 
    
@@ -63,7 +62,7 @@ function FilmDetails(props) {
                 </tr>
             </thead>
             <tbody>
-                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters} handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>
+                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters} changeAddEditMode={props.changeAddEditMode} setFilmToEdit={props.setFilmToEdit}/>
             </tbody>
         </Table>
     </>
@@ -72,26 +71,19 @@ function FilmDetails(props) {
 
 function FilmFiltered(props) {
     const date = dayjs();
-    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm} handleSave={props.handleSave} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode}/>)}</>
+    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm} changeAddEditMode={props.changeAddEditMode} setFilmToEdit={props.setFilmToEdit}/>)}</>
 }
 
 
-function handleEdit(film, props){
-    props.changeAddEditMode('edit');
-    return (<><EditOrNewFilm film={film} addNewOrEdit={props.addNewOrEdit} setaddNewOrEdit={props.setaddNewOrEdit} handleSave={props.handleSave} /></>)
-} 
-
 function FilmRow(props){
-    console.log("FilmRow, film by film by copy belove")
-    console.log(props.film);
     return (<>
         <tr>
             <td>{props.film.Title}</td>
             <td><DisplayFav film={props.film}/> </td>
             <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<RatingStar film={props.film}/>}</td>
+            <td><Button variant='primary' onClick={()=>{{{props.changeAddEditMode('edit'); props.setFilmToEdit(props.film)}}}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
-            <td><Button variant='primary' onClick={()=>{handleEdit(props.film, props)}}>{<PencilSquare/>}</Button></td>
         </tr>
     </>)
 }
@@ -171,12 +163,6 @@ function RatingStar(props){
 function AddFilm(props){
     if(props.addNewOrEdit=='false')
         return (<><Button variant="primary" onClick={() => props.changeAddEditMode('add')}> Add a new film</Button> </>)
-    if(props.addNewOrEdit=='add')
-    return (<>
-        <EditOrNewFilm setaddNewOrEdit={props.setaddNewOrEdit} handleAdd={props.handleAdd}/>
-        </>)
-       
-    
 }
 
 export { FilmLibrary, NameAndLogo, Filters, AddFilm};

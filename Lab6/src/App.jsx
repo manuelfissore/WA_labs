@@ -38,7 +38,7 @@ function App() {
     filter_favorite : {label:"filter-fav", id:"fav", filteredFilms: function(){ return films.filter(film=>film.isFavorite==true)}},
     filter_bestRated : {label:"filter-br", id:"bestRated", filteredFilms: function(){return films.filter(film=>film.Rating==5)}},
     filter_recentlySeen : {label:"filter-rs", id:"recentlySeen", filteredFilms:function(){return films.filter(recentlySeen)}},
-    filter_unseen:{label:"filter-unseen", id:"unseen", filteredFilms: function(){return films.filter(film=>films.Date=='undefined')}}
+    filter_unseen:{label:"filter-unseen", id:"unseen", filteredFilms: function(){return films.filter(film=>film.Date=='undefined')}}
   }
 
   const recentlySeen = (f) =>{
@@ -70,7 +70,7 @@ function App() {
   function handleSave(id, title, isFavorite, Date, Rating){
     setFilm((oldFilms) => (
       oldFilms.map((f)=>(f.ID===id?new Film(f.ID, title, isFavorite, Date, Rating):f))
-    ));
+    )); 
   }
 
   return <>
@@ -83,8 +83,8 @@ function App() {
       <Row>
         <Col sm={4}><Filters activeState={activeState}/></Col>
         <Col sm={8}>
-          <FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters} addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleSave={handleSave}/>
-          <AddFilm addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleAdd={handleAdd}/>
+          <FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters} addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleSave={handleSave} handleAdd={handleAdd}/>
+          <AddFilm addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode}/>
         </Col>
       </Row>
     </Container>
