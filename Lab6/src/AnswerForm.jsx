@@ -4,6 +4,7 @@ import {React} from 'react'
 import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck } from 'react-bootstrap';
 
 
+
 function EditOrNewFilm(props) {
     const [name, setName] = useState((props.addNewOrEdit=='edit')?props.film.Title:'');
     const [favorite, setFavorite] = useState((props.addNewOrEdit=='edit')?props.film.isFavorite:false);
@@ -66,9 +67,11 @@ function EditOrNewFilm(props) {
             </Row>
             <Row>
                 <Form.Group controlId="isFavorite">
-                    {props.addNewOrEdit=='add' && <Form.Check type="checkbox" onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav"/>}
-                    {props.addNewOrEdit=='edit' && (favorite==true || favorite=='on') && <Form.Check type="checkbox"  label='is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav" checked>is one of your favorite?</Form.Check>}
-                    {props.addNewOrEdit=='edit' && !(favorite==true || favorite=='on') && <Form.Check type="checkbox" label='is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}}  name="fav">is one of your favorite?</Form.Check>}
+                    <Col sm="4">
+                    {props.addNewOrEdit=='add' && <Form.Check type="checkbox" onChange={(ev)=>{setFavorite(ev.target.value)}} label='Is one of your favorite?' name="fav"/>}
+                    {props.addNewOrEdit=='edit' && (favorite==true || favorite=='on') && <Form.Check type="checkbox"  label='Is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav" checked></Form.Check>}
+                    {props.addNewOrEdit=='edit' && !(favorite==true || favorite=='on') && <Form.Check type="checkbox" label='Is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}}  name="fav"></Form.Check>}
+                    </Col>
                 </Form.Group>
             </Row>
             <Row>

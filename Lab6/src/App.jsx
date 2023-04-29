@@ -78,10 +78,10 @@ function App() {
     <NameAndLogo/>
   </header>
   <main>
-    <Container>
-      <Row>
-        <Col sm={4}><Filters activeState={activeState}/></Col>
-        <Col sm={8}>
+    <Container >
+      <Row className="justify-content-md-center">
+        <Col xs={4} md={4}><Filters activeState={activeState}/></Col>
+        <Col sm={10}>
           <FilmLibrary films={films} activeFilters={activeFilters} deleteFilm={deleteFilm} filters={filters} addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode} handleSave={handleSave} handleAdd={handleAdd}/>
           <AddFilm addNewOrEdit={addNewOrEdit} changeAddEditMode={changeAddEditMode}/>
         </Col>
