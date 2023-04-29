@@ -32,7 +32,6 @@ function App() {
   const [addNewOrEdit, setaddNewOrEdit] = useState('false')
   const [activeFilters, setActiveFilters] = useState('filter_all');
 
-
   const filters = {
     filter_all : {label:"filter-all", id:"all", filteredFilms: function() {return films}},
     filter_favorite : {label:"filter-fav", id:"fav", filteredFilms: function(){ return films.filter(film=>film.isFavorite==true)}},

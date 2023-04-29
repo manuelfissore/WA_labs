@@ -9,10 +9,6 @@ function EditOrNewFilm(props) {
     const [favorite, setFavorite] = useState((props.addNewOrEdit=='edit')?props.film.isFavorite:false);
     const [rating, setRating] = useState((props.addNewOrEdit=='edit')?props.film.Rating:0);
     const [date, setDate] = useState((props.addNewOrEdit=='edit')?props.film.Date:dayjs().format('YYYY-MM-DD'));
-    let name_var = name;
-    let favorite_var = favorite;
-    let rating_var = rating;
-    let date_var = date;
 
     function handleAdd(){
         props.changeAddEditMode('false')
@@ -33,27 +29,27 @@ function EditOrNewFilm(props) {
                 <td><Form.Group controlId="FilmName">
                         <Form.Label className='fw-light'>Film Name</Form.Label>
                         {props.addNewOrEdit=='add' && <Form.Control type="text" onChange={(ev)=>{setName(ev.target.value)}} name="text" placeholder="Enter Film Name" />}
-                        {props.addNewOrEdit=='edit' && <Form.Control type="text" onChange={(ev)=>{setName(ev.target.value)}} name="text" placeholder={name_var} />}
+                        {props.addNewOrEdit=='edit' && <Form.Control type="text" onChange={(ev)=>{setName(ev.target.value)}} name="text" placeholder={props.film.Title} />}
                     </Form.Group></td>
 
                 <td><Form.Group controlId="Insert watch date">
                     <Form.Label className='fw-light'>Enter watch date</Form.Label>
                     {props.addNewOrEdit=='add' && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date"/>}
-                    {props.addNewOrEdit=='edit' && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date" placeholder={(date=='undefined')?'':String(date.format*("AAAA/MM/DD"))}/>} {/*placeholder={(date=='undefined')?'':String(date.format*(AAAA/MM/DD))}*/}
+                    {props.addNewOrEdit=='edit' && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date" value={(props.film.Date=='undefined')?'':props.film.Date.format("YYYY-MM-DD")}/>} {/*placeholder={(date=='undefined')?'':String(date.format*(AAAA/MM/DD))}*/}
 
                 </Form.Group></td>
 
                 <td><Form.Group controlId="Rating">
                     <Form.Label className='fw-light'>Rating</Form.Label>
                     {props.addNewOrEdit=='add' && <Form.Control type="number" min="0" max="5"  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" placeholder="0" />}
-                    {props.addNewOrEdit=='edit' && <Form.Control type="number" min="0" max="5"  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" placeholder={rating_var} />}
+                    {props.addNewOrEdit=='edit' && <Form.Control type="number" min="0" max="5"  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" placeholder={props.film.Rating} />}
                 </Form.Group></td>
 
                 <td><Form.Group controlId="isFavorite">
                     <td>
                     {props.addNewOrEdit=='add' && <Form.Check type="checkbox"  onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav"/>}
-                    {props.addNewOrEdit=='edit' && (rating_var==true || rating_var=='on') && <Form.Check type="checkbox"  onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav" checked />}
-                    {props.addNewOrEdit=='edit' && !(rating_var==true || rating_var=='on') && <Form.Check type="checkbox"  onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav"/>}
+                    {props.addNewOrEdit=='edit' && (props.film.isFavorite==true || props.film.isFavorite=='on') && <Form.Check type="checkbox"  onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav" checked />}
+                    {props.addNewOrEdit=='edit' && !(props.film.isFavorite==true || props.film.isFavorite=='on') && <Form.Check type="checkbox"  onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav"/>}
                     </td>
                     <td>
                     <Form.Label className='fw-light'>is favorite?</Form.Label>
@@ -62,7 +58,6 @@ function EditOrNewFilm(props) {
                 
                 <td><Form.Group controlId="addButton">
                     <Form.Label className='fw-light'>&nbsp;</Form.Label><br />
-                    {console.log(props.addNewOrEdit)}
                     {props.addNewOrEdit=='add' && <Button variant='success' id="addbutton" onClick={handleAdd}>ADD</Button>}
                     {props.addNewOrEdit=='edit' && <Button variant='success' id="addbutton" onClick={handleSave}>SAVE</Button>}
                     {' '}<Button variant='secondary' id="addbutton" onClick={handleCancel}>CANCEL</Button>
