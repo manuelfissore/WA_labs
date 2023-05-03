@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container} from 'react-bootstrap';
-import {NameAndLogo} from "./Nav"
+import { Container, Navbar} from 'react-bootstrap';
 import { Edit } from './EditFilm';
 import { PageNotFound } from './PageNotFound';
 import { BrowserRouter, Outlet, Route, Routes, useParams } from 'react-router-dom';
+import { CameraReelsFill} from "react-bootstrap-icons";
 import {FilmTable} from './FilmTable'
 import dayjs from 'dayjs';
 const library= [{
@@ -80,7 +80,7 @@ function App() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<FilmTable films={films}/>} />
-        <Route path='/filter/:filtername'
+        <Route path='/filter/:filterName'
           element={<FilmTable films={films}/>} />
         <Route path='/edit/:idFilm'
           element={<Edit/>}/>
@@ -95,14 +95,20 @@ function App() {
 function MainLayout() {
   return <>
     <header>
-      <NameAndLogo/>
+      <Navbar  sticky="top" variant='dark' bg="primary" expand="lg" className='mb-1'>      
+        <Navbar.Brand>
+            <CameraReelsFill  color="White" size={30}/>
+            <div className='.me-4'> <span >Film Library</span></div>
+        </Navbar.Brand> 
+    </Navbar>
     </header>
     <main>
-      <Container>
+      <body>
+        <Container>
           <Outlet/>
-      </Container>
+        </Container>
+      </body>
     </main>
-
   </>
 }
 

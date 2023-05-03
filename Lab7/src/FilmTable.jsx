@@ -4,6 +4,8 @@ import { StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
 import {Filters} from "./Filter"
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from 'dayjs';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Row } from 'react-bootstrap/esm';
 
 function FilmTable(props) {
     const {filterName} = useParams();
@@ -23,28 +25,34 @@ function FilmTable(props) {
     
     if (props.films) {
         return (<>
-                <Col><Filters/></Col>
-            <Col>
-                <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete}/>
-            </Col>
-            {/*props.addNewOrEdit=='add' &&  <EditOrNewFilm addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleAdd={props.handleAdd}/>*/}
-            {/*props.addNewOrEdit=='edit' && <EditOrNewFilm key={filmToEdit.ID} film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>*/}
+            <div>
+                <Row>
+                    <Col sm={4} >
+                        <Filters/>
+                    </Col>
+                    <Col sm={8}>
+                        <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete}/>
+                    </Col>
+                </Row>
+                {/*props.addNewOrEdit=='add' &&  <EditOrNewFilm addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleAdd={props.handleAdd}/>*/}
+                {/*props.addNewOrEdit=='edit' && <EditOrNewFilm key={filmToEdit.ID} film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>*/}
+            </div> 
         </>)
     }
 }
     function FilmDetails(props) {
         return <>
-            <Table hover>
-                <thead >
+            <Table>
+                <thead>
                     <tr>
-                        <th scope="col">Title</th>
+                        <th scope="col" >Title</th>
                         <th scope="col">Favorite?</th>
                         <th scope="col">Date</th>
                         <th scope="col">Rating</th>
                     </tr>
                 </thead>
                 <tbody>
-                     return {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
+                    {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
                 </tbody>
             </Table>
         </>
@@ -56,21 +64,19 @@ function FilmFiltered(props) {
     console.log("Film Filtered ->" + props.activeFilter);
     if(props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
     (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
-        return (<><FilmRow film={props.film} handleDelete={props.handleDelete}/></>)
+        return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete}/></tr></>)
     
 }
 
 
 function FilmRow(props){
     return (<>
-        <tr>
             <td>{props.film.Title}</td>
             <td><DisplayFav film={props.film}/> </td>
             <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<RatingStar film={props.film}/>}</td>
             <td><Button variant='primary' onClick={()=>{props.handleEdit(props.film.ID)}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>
-        </tr>
     </>)
 }
 
@@ -97,51 +103,27 @@ function DisplayFav(props){
         switch (Number(props.film.Rating)){
             case 1:
                 return (<>
-                    <span><StarFill /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
+                    <span><StarFill/><Star/><Star/><Star/><Star/></span>
                 </>)
             case 2:
                 return (<>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
+                    <span><StarFill/><StarFill/><Star/><Star/><Star/></span>
                 </>)
             case 3:
                 return (<>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
+                     <span><StarFill/><StarFill/><StarFill/><Star/><Star/></span>
                 </>)
             case 4:
                 return (<>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><Star /></span>
+                    <span><StarFill/><StarFill/><StarFill/><StarFill/><Star/></span>
                 </>)
             case 5:
                 return (<>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
-                    <span><StarFill /></span>
+                     <span><StarFill/><StarFill/><StarFill/><StarFill/><StarFill/></span>
                 </>)
             default:
                 return (<>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
-                    <span><Star /></span>
+                    <span><Star/><Star/><Star/><Star/><Star/></span>
                 </>)
         }
     }
