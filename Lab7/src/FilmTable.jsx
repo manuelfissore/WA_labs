@@ -1,67 +1,63 @@
-import {React, useState} from 'react'
-import { Badge, Button, Col, Form, Row, Table, Container, Navbar, FormCheck } from 'react-bootstrap';
-import dayjs from "dayjs";
-import { CameraReelsFill, StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
-import { MDBRadio } from 'mdb-react-ui-kit';
-import { EditOrNewFilm } from './AnswerForm';
-import { Link, useNavigate, useParams } from "react-router-dom";
+/* eslint-disable react/prop-types */
+import { Button, Col, Form, Table} from 'react-bootstrap';
+import { StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
+import {Filters} from "./Filter"
+import { useNavigate, useParams } from "react-router-dom";
+import dayjs from 'dayjs';
 
-function FilmLibrary(props) {
-    const {filterName } = useParams();
+function FilmTable(props) {
+    const {filterName} = useParams();
     const navigate = useNavigate();
 
-    const handleAdd = (id) => {
+    console.log("Film table ->" + filterName);
+   /* const handleAdd = (id) => {
         navigate(`/addFilm/${id}`);
+    }
+    */
+    const handleEdit = (id) => {
+        navigate(`/editFilm/${id}`);
+    }
+    const handleDelete = (id) => {
+        props.deleteFilm(id);
     }
     
     if (props.films) {
         return (<>
-            <FilmDetails films={props.films} deleteFilm={props.deleteFilm} activeFilter={filterName} filters={props.filters}  changeAddEditMode={props.changeAddEditMode} setFilmToEdit={setFilmToEdit} />
+                <Col><Filters/></Col>
+            <Col>
+                <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete}/>
+            </Col>
             {/*props.addNewOrEdit=='add' &&  <EditOrNewFilm addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleAdd={props.handleAdd}/>*/}
             {/*props.addNewOrEdit=='edit' && <EditOrNewFilm key={filmToEdit.ID} film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>*/}
         </>)
     }
 }
-
-
-function NameAndLogo(props) {
-    return <>
-    <Navbar sticky="top" variant='dark' bg="primary" expand="lg" className='mb-1'>
-    <Container>
-        
-        <Navbar.Brand>
-            <CameraReelsFill  color="White" size={40}/>
-            <div className='.me-5'> <span >Film Library</span></div>
-        </Navbar.Brand> 
-    </Container>
-  </Navbar>
-  </>
-}
-
-
-
-function FilmDetails(props) {
-    return <>
-        <Table hover>
-            <thead >
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Favorite?</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Rating</th>
-                </tr>
-            </thead>
-            <tbody>
-                <FilmFiltered deleteFilm={props.deleteFilm} activeFilter={props.activeFilter} filters={props.filters} changeAddEditMode={props.changeAddEditMode} setFilmToEdit={props.setFilmToEdit}/>
-            </tbody>
-        </Table>
-    </>
-}
+    function FilmDetails(props) {
+        return <>
+            <Table hover>
+                <thead >
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Favorite?</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     return {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
+                </tbody>
+            </Table>
+        </>
+    }
 
 
 function FilmFiltered(props) {
     const date = dayjs();
-    return <>{props.filters[props.activeFilter].filteredFilms().map(f => <FilmRow key={f.ID} film={f} deleteFilm={props.deleteFilm} changeAddEditMode={props.changeAddEditMode} setFilmToEdit={props.setFilmToEdit}/>)}</>
+    console.log("Film Filtered ->" + props.activeFilter);
+    if(props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
+    (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
+        return (<><FilmRow film={props.film} handleDelete={props.handleDelete}/></>)
+    
 }
 
 
@@ -72,8 +68,8 @@ function FilmRow(props){
             <td><DisplayFav film={props.film}/> </td>
             <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<RatingStar film={props.film}/>}</td>
-            <td><Button variant='primary' onClick={()=>{{{props.changeAddEditMode('edit'); props.setFilmToEdit(props.film)}}}}>{<PencilSquare/>}</Button></td>
-            <td><Button variant='warning' onClick={()=>{props.deleteFilm(props.film.ID)}}>{<Trash/>}</Button></td>
+            <td><Button variant='primary' onClick={()=>{props.handleEdit(props.film.ID)}}>{<PencilSquare/>}</Button></td>
+            <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>
         </tr>
     </>)
 }
@@ -97,62 +93,63 @@ function DisplayFav(props){
     )}
 }  
 
-function RatingStar(props){
-    switch (Number(props.film.Rating)){
-        case 1:
-            return (<>
-                <span><StarFill /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-            </>)
-        case 2:
-            return (<>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-            </>)
-        case 3:
-            return (<>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-            </>)
-        case 4:
-            return (<>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><Star /></span>
-            </>)
-        case 5:
-            return (<>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-                <span><StarFill /></span>
-            </>)
-        default:
-            return (<>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-                <span><Star /></span>
-            </>)
+    function RatingStar(props){
+        switch (Number(props.film.Rating)){
+            case 1:
+                return (<>
+                    <span><StarFill /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                </>)
+            case 2:
+                return (<>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                </>)
+            case 3:
+                return (<>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                </>)
+            case 4:
+                return (<>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><Star /></span>
+                </>)
+            case 5:
+                return (<>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                    <span><StarFill /></span>
+                </>)
+            default:
+                return (<>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                    <span><Star /></span>
+                </>)
+        }
     }
-}
 
+/*
 function AddFilm(props){
-    if(props.addNewOrEdit=='false')
-        return (<><Button variant="primary" onClick={() => props.changeAddEditMode('add')}> Add a new film</Button> </>)
+    handleAdd();
 }
+*/
 
-export { FilmLibrary, NameAndLogo, Filters, AddFilm};
+export { FilmTable};

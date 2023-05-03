@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-import {Film} from './film'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Col, Row} from 'react-bootstrap';
-import { FilmLibrary, Filters, AddFilm} from "./Components";
+import { Container} from 'react-bootstrap';
 import {NameAndLogo} from "./Nav"
-import {Filters} from "./Filter"
-import dayjs, { Dayjs } from 'dayjs';
-
+import { Edit } from './EditFilm';
+import { PageNotFound } from './PageNotFound';
+import { BrowserRouter, Outlet, Route, Routes, useParams } from 'react-router-dom';
+import {FilmTable} from './FilmTable'
+import dayjs from 'dayjs';
 const library= [{
     ID:1, 
     Title: "Pulp Fiction",
@@ -30,9 +30,9 @@ const library= [{
 
 
 function App() {
-  const [films, setFilm] = useState([...library])
-  const [addNewOrEdit, setaddNewOrEdit] = useState('false')
-  const [activeFilter, setActiveFilter] = useState('filter_all');
+  const [films, setFilm] = useState([...library]);
+  //const [addNewOrEdit, setaddNewOrEdit] = useState('false');
+  /*const [activeFilter, setActiveFilter] = useState('filter_all');
 
   const filters = {
     filter_all : {label:"filter-all", id:"all", filteredFilms: function() {return films}},
@@ -40,10 +40,10 @@ function App() {
     filter_bestRated : {label:"filter-br", id:"bestRated", filteredFilms: function(){return films.filter(film=>film.Rating==5)}},
     filter_recentlySeen : {label:"filter-rs", id:"recentlySeen", filteredFilms:function(){return films.filter(recentlySeen)}},
     filter_unseen:{label:"filter-unseen", id:"unseen", filteredFilms: function(){return films.filter(film=>film.Date=='undefined')}}
-  }  
+  } 
 
   const recentlySeen = (f) =>{
-    const date=dayjs();
+    const date = dayjs();
     if (f.Date!='undefined' && date.diff(f.Date, 'month')<1)
       return f;
     else return false;
@@ -53,13 +53,14 @@ function App() {
     setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
   }
 
-  const activeState = (m) => {
+  const changeFilter= (m) => {
     setActiveFilter(m); 
   }
 
   function changeAddEditMode(m){
     setaddNewOrEdit(m); 
   }
+  
 
   function handleAdd(title, isFavorite, Date, Rating) {
     setFilm((oldFilms) => {
@@ -73,16 +74,16 @@ function App() {
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
     ));
   }
+  */
+  
   return <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<FilmTable films={films} />} />
+        <Route index element={<FilmTable films={films}/>} />
         <Route path='/filter/:filtername'
-          element={<AnswersList films={films} filter={activeFilter}/>} />
-        <Route path='/addAnswer/:idQuestion'
-          element={<AddAnswer addAnswer={addAnswer}/>} />
-        <Route path='/editAnswer/:idQuestion/:idAnswer'
-          element={<EditAnswer questions={questions} answers={answers} editAnswer={editAnswer} />} />
+          element={<FilmTable films={films}/>} />
+        <Route path='/edit/:idFilm'
+          element={<Edit/>}/>
         <Route path='*' element={<PageNotFound />} />
       </Route>
     </Routes>
@@ -92,19 +93,13 @@ function App() {
 }
 
 function MainLayout() {
-  const { idFilm } = useParams();
   return <>
     <header>
       <NameAndLogo/>
     </header>
     <main>
       <Container>
-        <Col>
-          <Filters/>
-        </Col>
-        <Col>
           <Outlet/>
-        </Col>
       </Container>
     </main>
 
