@@ -1,13 +1,22 @@
 import { useState } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Navbar} from 'react-bootstrap';
-import { Edit } from './EditFilm';
-import { PageNotFound } from './PageNotFound';
-import { BrowserRouter, Outlet, Route, Routes, useParams } from 'react-router-dom';
-import { CameraReelsFill} from "react-bootstrap-icons";
-import {FilmTable} from './FilmTable'
 import dayjs from 'dayjs';
+import { BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
+import { Container, Navbar} from 'react-bootstrap';
+import { CameraReelsFill} from "react-bootstrap-icons";
+import { PageNotFound } from './PageNotFound';
+import {FilmTable} from './FilmTable';
+import { AddOrEdit } from './AddOrEditFilm';
+
+function Film (ID, Title, isFavorite=false, Date, Rating) { 
+  this.ID=ID;
+  this.Title=Title;
+  this.isFavorite=isFavorite;
+  this.Date=dayjs(Date);
+  this.Rating= Rating;
+}
+
 const library= [{
     ID:1, 
     Title: "Pulp Fiction",
@@ -49,9 +58,7 @@ function App() {
     else return false;
   }
 
-  const deleteFilm = (id) => {
-    setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
-  }
+ 
 
   const changeFilter= (m) => {
     setActiveFilter(m); 
@@ -60,30 +67,38 @@ function App() {
   function changeAddEditMode(m){
     setaddNewOrEdit(m); 
   }
-  
+  */
+
+  function deleteFilm(id) {
+    setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
+  }
 
   function handleAdd(title, isFavorite, Date, Rating) {
+    
     setFilm((oldFilms) => {
       const newId = Math.max(...oldFilms.map(f => f.ID)) + 1;
       const newFilm = new Film(newId, title, isFavorite, Date, Rating);
       return [...oldFilms, newFilm];
     });
   }
+
   function handleSave(id, title, isFavorite, Date, Rating){
     setFilm((oldFilms) => (
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
     ));
   }
-  */
+
   
   return <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<FilmTable films={films}/>} />
+        <Route index element={<FilmTable films={films} deleteFilm={deleteFilm}/>} />
         <Route path='/filter/:filterName'
-          element={<FilmTable films={films}/>} />
-        <Route path='/edit/:idFilm'
-          element={<Edit/>}/>
+          element={<FilmTable films={films} deleteFilm={deleteFilm}/>} />
+        <Route path='/edit/:id'
+          element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave}/>}/>
+        <Route path='/addfilm'
+          element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave}/>}/>
         <Route path='*' element={<PageNotFound />} />
       </Route>
     </Routes>
@@ -95,17 +110,17 @@ function App() {
 function MainLayout() {
   return <>
     <header>
-      <Navbar  sticky="top" variant='dark' bg="primary" expand="lg" className='mb-1'>      
+      <Navbar fluid sticky="top" variant='dark' bg="primary" expand="lg" className='mb-3'>      
         <Navbar.Brand>
             <CameraReelsFill  color="White" size={30}/>
-            <div className='.me-4'> <span >Film Library</span></div>
+            <div className='.me-6'> <span className='logoName'>Film Library</span></div>
         </Navbar.Brand> 
     </Navbar>
     </header>
     <main>
       <body>
         <Container>
-          <Outlet/>
+            <Outlet/>
         </Container>
       </body>
     </main>

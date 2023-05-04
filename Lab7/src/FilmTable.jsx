@@ -4,8 +4,11 @@ import { StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
 import {Filters} from "./Filter"
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from 'dayjs';
+import "./Table.css"
+import { AddFilm } from './AddFilm';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row } from 'react-bootstrap/esm';
+
 
 function FilmTable(props) {
     const {filterName} = useParams();
@@ -16,7 +19,7 @@ function FilmTable(props) {
         navigate(`/addFilm/${id}`);
     }
     */
-    const handleEdit = (id) => {
+    function handleEdit(id) {
         navigate(`/editFilm/${id}`);
     }
     const handleDelete = (id) => {
@@ -25,7 +28,7 @@ function FilmTable(props) {
     
     if (props.films) {
         return (<>
-            <div>
+            <div className='centerTable'>
                 <Row>
                     <Col sm={4} >
                         <Filters/>
@@ -40,23 +43,24 @@ function FilmTable(props) {
         </>)
     }
 }
-    function FilmDetails(props) {
-        return <>
-            <Table>
-                <thead>
-                    <tr>
-                        <th scope="col" >Title</th>
-                        <th scope="col">Favorite?</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Rating</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
-                </tbody>
-            </Table>
-        </>
-    }
+function FilmDetails(props) {
+    return <>
+        <Table >
+            <thead>
+                <tr>
+                    <th scope="col" >Title</th>
+                    <th scope="col">Favorite?</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
+            </tbody>
+        </Table>
+        <AddFilm/>
+    </>
+}
 
 
 function FilmFiltered(props) {
@@ -70,12 +74,13 @@ function FilmFiltered(props) {
 
 
 function FilmRow(props){
+    const navigate = useNavigate();
     return (<>
             <td>{props.film.Title}</td>
             <td><DisplayFav film={props.film}/> </td>
-            <td>{(props.film.Date=='undefined')?'':(props.film.Date.format('YYYY/MM/DD'))}</td>
+            <td>{((props.film.Date=='undefined')||(props.film.Date===undefined)||(!dayjs(props.date).isValid))?' ':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<RatingStar film={props.film}/>}</td>
-            <td><Button variant='primary' onClick={()=>{props.handleEdit(props.film.ID)}}>{<PencilSquare/>}</Button></td>
+            <td><Button variant='primary' onClick={()=>{navigate(`/edit/${props.film.ID}`)}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>
     </>)
 }
