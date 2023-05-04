@@ -14,18 +14,16 @@ function FilmTable(props) {
     const {filterName} = useParams();
     const navigate = useNavigate();
 
-    console.log("Film table ->" + filterName);
-   /* const handleAdd = (id) => {
-        navigate(`/addFilm/${id}`);
-    }
-    */
     function handleEdit(id) {
         navigate(`/editFilm/${id}`);
     }
     const handleDelete = (id) => {
         props.deleteFilm(id);
     }
-    
+    const handleChangePreference = (id) => {
+        props.changePreference(id);
+    }
+
     if (props.films) {
         return (<>
             <div className='centerTable'>
@@ -34,11 +32,9 @@ function FilmTable(props) {
                         <Filters/>
                     </Col>
                     <Col sm={8}>
-                        <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete}/>
+                        <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete} handleChangePreference={handleChangePreference}/>
                     </Col>
                 </Row>
-                {/*props.addNewOrEdit=='add' &&  <EditOrNewFilm addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleAdd={props.handleAdd}/>*/}
-                {/*props.addNewOrEdit=='edit' && <EditOrNewFilm key={filmToEdit.ID} film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>*/}
             </div> 
         </>)
     }
@@ -55,7 +51,7 @@ function FilmDetails(props) {
                 </tr>
             </thead>
             <tbody>
-                {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}/>)}
+                {props.films.map(f => <FilmFiltered key={f.ID} film={f} activeFilter={props.activeFilter} handleEdit={props.handleEdit} handleDelete={props.handleDelete}  handleChangePreference={props.handleChangePreference}/>)}
             </tbody>
         </Table>
         <AddFilm/>
@@ -65,10 +61,9 @@ function FilmDetails(props) {
 
 function FilmFiltered(props) {
     const date = dayjs();
-    console.log("Film Filtered ->" + props.activeFilter);
     if(props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
     (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
-        return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete}/></tr></>)
+        return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference}/></tr></>)
     
 }
 
@@ -77,8 +72,8 @@ function FilmRow(props){
     const navigate = useNavigate();
     return (<>
             <td>{props.film.Title}</td>
-            <td><DisplayFav film={props.film}/> </td>
-            <td>{((props.film.Date=='undefined')||(props.film.Date===undefined)||(!dayjs(props.date).isValid))?' ':(props.film.Date.format('YYYY/MM/DD'))}</td>
+            <td><DisplayFav film={props.film} handleChangePreference={props.handleChangePreference}/> </td>
+            <td>{((props.film.Date=='Invalid Date')||(props.film.Date=='undefined')||(props.film.Date===undefined)||(!dayjs(props.date).isValid))?' ':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<RatingStar film={props.film}/>}</td>
             <td><Button variant='primary' onClick={()=>{navigate(`/edit/${props.film.ID}`)}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>
@@ -86,18 +81,17 @@ function FilmRow(props){
 }
 
 function DisplayFav(props){
-    
     if(props.film.isFavorite){
         return (<>
             <Form.Group controlId="formBasicCheckBox">
-                <Form.Check type="checkbox" disabled defaultChecked/>
+                <Form.Check type="checkbox" defaultChecked onClick={()=>{props.handleChangePreference(props.film.ID)}}/>
             </Form.Group>
         </>
     )}
     else{
         return (<>
             <Form.Group controlId="formBasicCheckBox">
-                <Form.Check type="checkbox" disabled/>
+                <Form.Check type="checkbox" onClick={()=>{{()=>{props.handleChangePreference(props.film.ID)}}}}/>
             </Form.Group>
         </>
         
@@ -132,11 +126,5 @@ function DisplayFav(props){
                 </>)
         }
     }
-
-/*
-function AddFilm(props){
-    handleAdd();
-}
-*/
 
 export { FilmTable};

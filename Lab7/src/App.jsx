@@ -50,20 +50,15 @@ function App() {
     filter_recentlySeen : {label:"filter-rs", id:"recentlySeen", filteredFilms:function(){return films.filter(recentlySeen)}},
     filter_unseen:{label:"filter-unseen", id:"unseen", filteredFilms: function(){return films.filter(film=>film.Date=='undefined')}}
   } 
-
   const recentlySeen = (f) =>{
     const date = dayjs();
     if (f.Date!='undefined' && date.diff(f.Date, 'month')<1)
       return f;
     else return false;
   }
-
- 
-
   const changeFilter= (m) => {
     setActiveFilter(m); 
   }
-
   function changeAddEditMode(m){
     setaddNewOrEdit(m); 
   }
@@ -87,16 +82,21 @@ function App() {
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
     ));
   }
+  function changePreference(id){
+    setFilm((oldFilms) => (
+      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, f.Title, (!f.isFavorite), f.Date, f.Rating): f))
+    ));
+  }
 
   
   return <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<FilmTable films={films} deleteFilm={deleteFilm}/>} />
+        <Route index element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference}/>} />
         <Route path='/filter/:filterName'
-          element={<FilmTable films={films} deleteFilm={deleteFilm}/>} />
+          element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference}/>} />
         <Route path='/edit/:id'
-          element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave}/>}/>
+          element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave} />}/>
         <Route path='/addfilm'
           element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave}/>}/>
         <Route path='*' element={<PageNotFound />} />
@@ -110,7 +110,7 @@ function App() {
 function MainLayout() {
   return <>
     <header>
-      <Navbar fluid sticky="top" variant='dark' bg="primary" expand="lg" className='mb-3'>      
+      <Navbar sticky="top" variant='dark' bg="primary" expand="lg" className='mb-3'>      
         <Navbar.Brand>
             <CameraReelsFill  color="White" size={30}/>
             <div className='.me-6'> <span className='logoName'>Film Library</span></div>
@@ -118,11 +118,9 @@ function MainLayout() {
     </Navbar>
     </header>
     <main>
-      <body>
         <Container>
             <Outlet/>
         </Container>
-      </body>
     </main>
   </>
 }
