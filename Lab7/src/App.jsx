@@ -83,18 +83,27 @@ function App() {
     ));
   }
   function changePreference(id){
+    //console.log("change preference" + id)
     setFilm((oldFilms) => (
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, f.Title, (!f.isFavorite), f.Date, f.Rating): f))
     ));
+    //console.log(films.map((f)=>(f.ID === Number(id) ? f.isFavorite : "bruh")))
+  }
+  function changeRating(id, newRating){
+    console.log("change Rating " + newRating)
+    setFilm((oldFilms) => (
+      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, f.Title, f.isFavorite, f.Date, newRating): f))
+    ));
+  
   }
 
   
   return <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference}/>} />
+        <Route index element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference} changeRating={changeRating}/>} />
         <Route path='/filter/:filterName'
-          element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference}/>} />
+          element={<FilmTable films={films} deleteFilm={deleteFilm} changePreference={changePreference} changeRating={changeRating}/>} />
         <Route path='/edit/:id'
           element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave} />}/>
         <Route path='/addfilm'

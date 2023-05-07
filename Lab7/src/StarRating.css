@@ -1,0 +1,17 @@
+.custom-btn {
+    display: inline-block;
+    background-color: transparent;
+    padding: 0em 0em;
+    border: none;
+    outline: none;
+    border-radius: 1px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .on {
+    color: #fff70b;
+  }
+  .off {
+    color: #ccc;
+  }
+  
