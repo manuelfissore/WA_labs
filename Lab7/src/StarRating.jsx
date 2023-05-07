@@ -16,7 +16,7 @@ function StarRating(props){
                 type="button"
                 key={index}
                 className={index <= (hover || props.film.Rating) ? "on" : "off"}
-                onClick={() => {setRating(index); props.changeRating(props.film.id, rating)}}
+                onClick={() => {setRating(index); props.changeRating(props.film.id, index)}}
                 onMouseEnter={() => setHover(index)}
                 onMouseLeave={() => setHover(rating)}
               >

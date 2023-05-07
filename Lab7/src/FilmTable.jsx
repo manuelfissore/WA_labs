@@ -31,7 +31,7 @@ function FilmTable(props) {
             <div className='centerTable'>
                 <Row>
                     <Col sm={4} >
-                        <Filters/>
+                        <Filters filter={filterName}/>
                     </Col>
                     <Col sm={8}>
                         <FilmDetails films={props.films} activeFilter={filterName} handleEdit={handleEdit} handleDelete={handleDelete} handleChangePreference={handleChangePreference} changeRating={props.changeRating}/>
@@ -63,7 +63,9 @@ function FilmDetails(props) {
 
 function FilmFiltered(props) {
     const date = dayjs();
-    if(props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
+    if (props.activeFilter===undefined)
+        return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference} changeRating={props.changeRating}/></tr></>)
+    else if (props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
     (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
         return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference} changeRating={props.changeRating}/></tr></>)
     
