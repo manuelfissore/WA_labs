@@ -13,7 +13,7 @@ function Filters(props) {
         <Form.Check  type="radio" id='Unseen' name='group1' label='Unseen'  onChange={()=>{navigate("/filter/unseen")}}/>
     </>
     )*/
-    console.log(props.filter)
+    //console.log(props.filter)
     return (<>   
          <div>
             <Button id='All'  name='group1' label='All'  className={(props.filter===undefined||props.filter==="")?"btn btn-info":"btn btn-light"} onClick={()=>{navigate("/")}}>All</Button>

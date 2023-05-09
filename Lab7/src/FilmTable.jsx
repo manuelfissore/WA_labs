@@ -21,9 +21,9 @@ function FilmTable(props) {
     const handleDelete = (id) => {
         props.deleteFilm(id);
     }
-    const handleChangePreference = (id) => {
+    const handleChangePreference = (f) => {
         //console.log("handle Preference " + id)
-        props.changePreference(id);
+        props.changePreference(f);
     }
 
     if (props.films) {
@@ -66,7 +66,7 @@ function FilmFiltered(props) {
     if (props.activeFilter===undefined)
         return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference} changeRating={props.changeRating}/></tr></>)
     else if (props.activeFilter==null || (props.activeFilter==='favorite' && props.film.isFavorite) ||(props.activeFilter==='bestRated' && props.film.Rating==5)||
-    (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && props.film.Date==='undefined'))
+    (props.activeFilter==='recentlySeen' && (date.diff(props.film.Date, 'month')<1)) || (props.activeFilter==='unseen' && (props.film.Date==='undefined'||isNaN(props.film.Date))))
         return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference} changeRating={props.changeRating}/></tr></>)
     
 }
@@ -74,10 +74,11 @@ function FilmFiltered(props) {
 
 function FilmRow(props){
     const navigate = useNavigate();
+    //console.log("date of film"+props.film.ID+"->"+props.film.Date);
     return (<>
             <td>{props.film.Title}</td>
             <td><DisplayFav film={props.film} handleChangePreference={props.handleChangePreference}/> </td>
-            <td>{((props.film.Date=='Invalid Date')||(props.film.Date=='undefined')||(props.film.Date===undefined)||(!dayjs(props.date).isValid))?' ':(props.film.Date.format('YYYY/MM/DD'))}</td>
+            <td>{((props.film.Date=='Invalid Date')||(props.film.Date=='undefined')||(props.film.Date===undefined)||isNaN(props.film.Date))?' ':(props.film.Date.format('YYYY/MM/DD'))}</td>
             <td>{<StarRating film={props.film} changeRating={props.changeRating}/>}</td>
             <td><Button variant='primary' className='button-del-edit' onClick={()=>{navigate(`/edit/${props.film.ID}`)}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>
@@ -89,14 +90,14 @@ function DisplayFav(props){
     if(props.film.isFavorite){
         return (<>
             <Form.Group controlId="formBasicCheckBox">
-                <Form.Check type="checkbox" defaultChecked onClick={()=>{props.handleChangePreference(props.film.ID)}}/>
+                <Form.Check type="checkbox" defaultChecked onClick={()=>{props.handleChangePreference(props.film)}}/>
             </Form.Group>
         </>
     )}
     else{
         return (<>
             <Form.Group controlId="formBasicCheckBox">
-                <Form.Check type="checkbox" onClick={()=>{props.handleChangePreference(props.film.ID)}}/>
+                <Form.Check type="checkbox" onClick={()=>{props.handleChangePreference(props.film)}}/>
             </Form.Group>
         </>
         

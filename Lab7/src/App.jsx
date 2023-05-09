@@ -82,19 +82,21 @@ function App() {
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
     ));
   }
-  function changePreference(id){
-    //console.log("change preference" + id)
+  function changePreference(film){
+    //console.log("change preference" + film.ID+ " ->" + film.Date)
     setFilm((oldFilms) => (
-      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, f.Title, (!f.isFavorite), f.Date, f.Rating): f))
-    ));
+      oldFilms.map((f)=>(f.ID === Number(film.ID) ? new Film (film.ID, f.Title, (!f.isFavorite), (film.Date===undefined)?undefined:film.Date, f.Rating): f))
+      
+      ));
+      //console.log("after changed preference" + film.ID+ " ->" + film.Date)
     //console.log(films.map((f)=>(f.ID === Number(id) ? f.isFavorite : "bruh")))
   }
   function changeRating(id, newRating){
-    console.log("change Rating " + newRating)
+    //console.log("change Rating id:" + id+"-> "+ newRating)
     setFilm((oldFilms) => (
-      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, f.Title, f.isFavorite, f.Date, newRating): f))
+      oldFilms.map((f)=>(f.ID === Number(id) ? new Film (f.ID, f.Title, f.isFavorite, f.Date, newRating): f))
     ));
-  
+    
   }
 
   

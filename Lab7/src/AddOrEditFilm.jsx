@@ -19,12 +19,15 @@ function AddOrEdit(props){
     const [name, setName] = useState((!(id===undefined))?film.Title:'');
     const [favorite, setFavorite] = useState((!(id===undefined))?film.isFavorite:false);
     const [rating, setRating] = useState((!(id===undefined))?film.Rating:0);
-    const [date, setDate] = useState((!(id===undefined))?film.Date:dayjs().format('YYYY-MM-DD'));
+    const [date, setDate] = useState((!(id===undefined))?dayjs(film.Date).format('YYYY-MM-DD'):dayjs().format('YYYY-MM-DD'));
     const [error, setError] = useState(false);
 
     function handleAdd(){
-        if(name==""||name==''||name==" "||name.lenght==0||name==null){
-            setError(true)
+        if(name==""||name==''||name==" "||name.lenght==0||name==null||rating>5||rating<0){
+            if(name==""||name==''||name==" "||name.lenght==0||name==null)
+                setError('errorName')
+            else
+                setError('errorRating')
         }
         else{
             setError(false)
@@ -34,8 +37,11 @@ function AddOrEdit(props){
     }
 
     function handleSave(){
-        if(name==""||name==''||name==" "||name.lenght==0||name==null){
-            setError(true)
+        if(name==""||name==''||name==" "||name.lenght==0||name==null||rating>5||rating<0){
+            if(name==""||name==''||name==" "||name.lenght==0||name==null)
+                setError('errorName')
+            else
+                setError('errorRating')
         }
         else{
             setError(false)
@@ -56,8 +62,11 @@ function AddOrEdit(props){
                     <Row>
                         <Form.Group controlId="FilmName">
                                 <Form.Label className='fw-light'>Film Name</Form.Label>
-                                {id===undefined && <Form.Control type="text" className={(error==false)?"":"form-square border border-danger"} onChange={(ev)=>{setName(ev.target.value)}} name="Title" placeholder="Enter Film Name" />}
-                                {!(id===undefined) && <Form.Control type="text" className={(error==false)?"":"form-square border border-danger"} onChange={(ev)=>{setName(ev.target.value)}} name="Title" value={name} />}
+                                {id===undefined && <Form.Control type="text" className={(error!='errorName')?"":"form-square border border-danger"} onChange={(ev)=>{setName(ev.target.value)}} name="Title" placeholder="Enter Film Name" />}
+                                {!(id===undefined) && <Form.Control type="text" className={(error!='errorName')?"":"form-square border border-danger"} onChange={(ev)=>{setName(ev.target.value)}} name="Title" value={name} />}
+                                {error=='errorName' && <Form.Text id="emptyName" style={{color: "red"}}> 
+                                    Can&apos;t be empty 
+                                </Form.Text>}
                             </Form.Group>
                     </Row>
                     <Row>
@@ -65,15 +74,18 @@ function AddOrEdit(props){
                             <Form.Group controlId="Insert watch date">
                                 <Form.Label className='fw-light'>Enter watch date</Form.Label>
                                 {id===undefined  && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date"/>}
-                                {!(id===undefined)  && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date" value={(date=='undefined')?'':date.format("YYYY-MM-DD")}/>} 
+                                {!(id===undefined)  && <Form.Control type="date" onChange={(ev)=>{setDate(ev.target.value)}} name="date" value={(date===undefined)?'':date}/>} 
                                 {/*placeholder={(date=='undefined')?'':String(date.format*(AAAA/MM/DD))}*/}
                                 </Form.Group>
                         </Col>
                         <Col  xs={4}>
                             <Form.Group controlId="Rating">
                                 <Form.Label className='fw-light'>Rating</Form.Label>
-                                {id===undefined && <Form.Control type="number" min="0" max="5"  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" placeholder="0" />}
-                                {!(id===undefined)  && <Form.Control type="number" min="0" max="5"  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" value={rating} />}
+                                {id===undefined && <Form.Control type="number" min="0" max="5"  className={(error!='errorRating')?"":"form-square border border-danger"} onChange={(ev)=>{setRating(ev.target.value)}} name="rating" placeholder="0" />}
+                                {!(id===undefined)  && <Form.Control type="number" min="0" max="5"  className={(error!='errorRating')?"":"form-square border border-danger"}  onChange={(ev)=>{setRating(ev.target.value)}} name="rating" value={rating} />}
+                                {error=='errorRating' && <Form.Text id="wrongBoundaries" style={{color: "red"}}> 
+                                    Must be form 0 to 5 
+                                </Form.Text>}
                             </Form.Group>
                         </Col>
                     </Row>
