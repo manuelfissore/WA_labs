@@ -1,0 +1,3 @@
+
+CREATE TABLE FILM (ID INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, isFavorite BOOLEAN, Date DATE, Rating INTEGER CHECK(Rating >= 0 AND Rating <= 5));
+INSERT INTO FILM (Title, isFavorite, Date, Rating) VALUES ('The Shawshank Redemption', 1, '1994-09-22', 5), ('The Godfather', 1, '1972-03-14', 5), ('The Dark Knight', 1, '2008-07-18', 5),('The Godfather: Part II', 1, '1974-12-20', 5),('12 Angry Men', 0, '1957-04-10', 4);
