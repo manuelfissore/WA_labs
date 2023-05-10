@@ -15,9 +15,6 @@ function FilmLibrary(props) {
         {props.addNewOrEdit=='edit' && <EditOrNewFilm key={filmToEdit.ID} film={(filmToEdit!=null)?filmToEdit:console.log('film non passato correttamente')} addNewOrEdit={props.addNewOrEdit} changeAddEditMode={props.changeAddEditMode} handleSave={props.handleSave}/>}
         </>)
     }
-
-   
-
 }
 
 function Filters(props) {
