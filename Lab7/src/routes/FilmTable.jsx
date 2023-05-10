@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button, Col, Form, Table} from 'react-bootstrap';
-import { StarFill, Star, Trash, PencilSquare} from "react-bootstrap-icons";
+import { Trash, PencilSquare} from "react-bootstrap-icons";
 import {Filters} from "./Filter"
 import { useNavigate, useParams } from "react-router-dom";
 import { StarRating } from './StarRating';
@@ -60,7 +60,6 @@ function FilmDetails(props) {
     </>
 }
 
-
 function FilmFiltered(props) {
     const date = dayjs();
     if (props.activeFilter===undefined)
@@ -70,7 +69,6 @@ function FilmFiltered(props) {
         return (<><tr><FilmRow film={props.film} handleDelete={props.handleDelete} handleChangePreference={props.handleChangePreference} changeRating={props.changeRating}/></tr></>)
     
 }
-
 
 function FilmRow(props){
     const navigate = useNavigate();
@@ -103,34 +101,4 @@ function DisplayFav(props){
         
     )}
 }  
-/*
-    function RatingStar(props){
-        switch (Number(props.film.Rating)){
-            case 1:
-                return (<>
-                    <span><StarFill/><Star/><Star/><Star/><Star/></span>
-                </>)
-            case 2:
-                return (<>
-                    <span><StarFill/><StarFill/><Star/><Star/><Star/></span>
-                </>)
-            case 3:
-                return (<>
-                     <span><StarFill/><StarFill/><StarFill/><Star/><Star/></span>
-                </>)
-            case 4:
-                return (<>
-                    <span><StarFill/><StarFill/><StarFill/><StarFill/><Star/></span>
-                </>)
-            case 5:
-                return (<>
-                     <span><StarFill/><StarFill/><StarFill/><StarFill/><StarFill/></span>
-                </>)
-            default:
-                return (<>
-                    <span><Star/><Star/><Star/><Star/><Star/></span>
-                </>)
-        }
-    }
-*/
 export { FilmTable};

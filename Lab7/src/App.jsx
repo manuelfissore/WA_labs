@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 import { BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
 import { Container, Navbar} from 'react-bootstrap';
 import { CameraReelsFill} from "react-bootstrap-icons";
-import { PageNotFound } from './PageNotFound';
-import {FilmTable} from './FilmTable';
-import { AddOrEdit } from './AddOrEditFilm';
+import { PageNotFound } from './routes/PageNotFound';
+import {FilmTable} from './routes/FilmTable';
+import { AddOrEdit } from './routes/AddOrEditFilm';
 
 function Film (ID, Title, isFavorite=false, Date, Rating) { 
   this.ID=ID;
