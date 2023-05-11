@@ -5,7 +5,7 @@ function Film(ID, Title, isFavorite, Date, Rating){
     this.ID=ID;
     this.Title=Title;
     this.isFavorite=isFavorite;
-    this.Date=dayjs(Date);
+    this.Date=(Date==null)?null:dayjs(Date);
     this.Rating= Rating;
 }
 

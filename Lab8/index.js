@@ -10,8 +10,9 @@ app.use(morgan());
 app.use(express.json());
 
 app.post('/api/films', (req,res)=>{
-    //console.log(req.body)
+    
     const film = new Film(null, req.body.Title, req.body.isFavorite, req.body.Date, req.body.Rating) ;
+    console.log(film)
     dao.createFilm(film).then((result)=>{
         res.end() ;
     }).catch((error)=>{
@@ -28,14 +29,17 @@ app.get('/api/films', (req, res)=>{
     })
 })
 
+//NON FUNZIONA
 app.get('/api/films/:filmId', (req, res)=>{
+    console.log(req.params.filmId)
     dao.readFilm(req.params.filmId).then((result)=>{
         res.json(result);
     }).catch((error)=>{
         res.status(500).send(error) ;
     })
 })
-app.get('/api/films/filter/:filter', (req, res)=>{
+
+app.get('/api/films/filters/:filter', (req, res)=>{
     dao.filteredFilm(req.params.filter).then((result)=>{
         res.json(result);
     }).catch((error)=>{
@@ -43,11 +47,6 @@ app.get('/api/films/filter/:filter', (req, res)=>{
     })
 })
 
-
-
-app.post('/api/films/:filmId', (req, res)=>{
-    
-})
 
 app.delete('/api/films/:filmId', (req,res)=>{
     dao.deleteFilm(req.params.filmId).then((result)=>{
