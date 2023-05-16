@@ -12,12 +12,12 @@ const db = new sqlite.Database('films.db', (err) => {
 function readFilm(id) {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM films WHERE id=?';
-        db.all(sql,[id], (err, row) => {
+        db.all(sql,[id], (err, rows) => {
             if (err)
                 reject(err)
             else {
-                const film = new Film(row.id, row.title, row.favorite, row.watchdate, row.rating);
-                resolve(film);
+                const films = rows.map((row) => new Film(row.id, row.title, row.favorite, row.watchdate, row.rating));
+                resolve(films[0]);
             }
         });
     });
@@ -25,14 +25,27 @@ function readFilm(id) {
 
 function createFilm(film) {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO films (title, favorite, watchdate, rating, user) VALUES(?,?,?,?,?)';
-        db.run(sql, [film.Title, film.isFavorite, (film.Date==null)?null:dayjs(film.Date).format('YYYY-MM-DD').toString(), film.Rating, 1], (err) => {
-            if (err)
-                reject(err.message);
-            else
-                resolve(true);
-        });
+        let sql;
+        if(film.Date==null){
+            sql = 'INSERT INTO films (title, favorite, watchdate, rating, user) VALUES(?,?,NULL,?,?)';
+            db.run(sql, [film.Title, film.isFavorite, film.Rating, 1], (err) => {
+                if (err)
+                    reject(err.message);
+                else
+                    resolve(true);
+            });
+        }
+            
+        else {
+             sql = 'INSERT INTO films (title, favorite, watchdate, rating, user) VALUES(?,?,?,?,?)';
+            db.run(sql, [film.Title, film.isFavorite, dayjs(film.Date).format('YYYY-MM-DD').toString(), film.Rating, 1], (err) => {
+                if (err)
+                    reject(err.message);
+                else
+                    resolve(true);
+            });
 
+        }
     });
 }
 
@@ -51,15 +64,24 @@ function deleteFilm(id) {
 
 function modifyFilm(film) {
     return new Promise((resolve, reject) => {
+        if (film.Date==null){
+            const sql = 'UPDATE films SET title=?, favorite=?, watchdate=NULL, rating=? WHERE id=?';
+            db.run(sql, [film.Title, film.isFavorite, film.Rating, film.ID], (err) => {
+                if (err)
+                    reject(err.message);
+                else
+                    resolve(film);
+            });
+        }
+        else{
         const sql = 'UPDATE films SET title=?, favorite=?, watchdate=?, rating=? WHERE id=?';
-        db.run(sql, [film.Title, film.isFavorite, (film.Date==null)?null:dayjs(film.Date).format('YYYY-MM-DD').toString(), film.Rating, film.ID], (err) => {
+        db.run(sql, [film.Title, film.isFavorite, dayjs(film.Date).format('YYYY-MM-DD').toString(), film.Rating, film.ID], (err) => {
             if (err)
                 reject(err.message);
             else
                 resolve(film);
         });
-
-    });
+    }});
 }
 
 function listFilms() {
@@ -82,9 +104,9 @@ function filteredFilm(filter) {
     else if(filter=='bestRated')
          sql = 'SELECT * FROM films WHERE rating=5';
     else if(filter=='recentlySeen')
-         sql = 'SELECT * FROM films WHERE watchdate>=DATE("now", "-1 month")';
+         sql = 'SELECT * FROM films WHERE watchdate>=DATE("now", "-1 month") AND watchdate IS NOT NULL';
     else if(filter=='unseen')
-         sql = 'SELECT * FROM films WHERE watchdate=null'; //non va
+         sql = 'SELECT * FROM films WHERE watchdate IS NULL';
     else if (filter=='filterAll')
          sql = 'SELECT * FROM films'
     return new Promise((resolve, reject) => {
