@@ -4,10 +4,12 @@ const express = require('express') ;
 const morgan = require('morgan') ;
 const dao = require('./film-dao') ;
 const {Film} = require('./film') ;
+const cors = require('cors');
 
 const app = express() ;
 app.use(morgan());
 app.use(express.json());
+app.use(cors());
 
 //ok
 app.post('/api/films', (req,res)=>{
