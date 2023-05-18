@@ -1,42 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect  } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import dayjs from 'dayjs';
+import {Film} from './film'
 import { BrowserRouter, Outlet, Route, Routes} from 'react-router-dom';
 import { Container, Navbar} from 'react-bootstrap';
 import { CameraReelsFill} from "react-bootstrap-icons";
 import { PageNotFound } from './routes/PageNotFound';
 import {FilmTable} from './routes/FilmTable';
 import { AddOrEdit } from './routes/AddOrEditFilm';
-import { deleteFilm, listFilm } from './API';
-
-function Film (ID, Title, isFavorite=false, Date, Rating) { 
-  this.ID=ID;
-  this.Title=Title;
-  this.isFavorite=isFavorite;
-  this.Date=dayjs(Date);
-  this.Rating= Rating;
-}
+import {listFilm} from './API';
 
 function App() {
-  const [films, setFilm] = useState([]);
-  const [loading, setLoading] = useState(true) ;
+  const [films, setFilms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     // load the list of questions from the API server
     listFilm().then((list) => {
-      setFilm(list);
+      setFilms(list);
       setLoading(false) ;
     })
   }, []);
-/*
+
+
   function deleteFilm(id) {
-    setFilm((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
+    setFilms((oldFilms) => (oldFilms.filter((f) => (f.ID !== id))));
   }
 
   function handleAdd(title, isFavorite, Date, Rating) {
     
-    setFilm((oldFilms) => {
+    setFilms((oldFilms) => {
       const newId = Math.max(...oldFilms.map(f => f.ID)) + 1;
       const newFilm = new Film(newId, title, isFavorite, Date, Rating);
       return [...oldFilms, newFilm];
@@ -44,30 +39,30 @@ function App() {
   }
 
   function handleSave(id, title, isFavorite, Date, Rating){
-    setFilm((oldFilms) => (
+    setFilms((oldFilms) => (
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (id, title, isFavorite, Date, Rating): f))
     ));
   }
   function changePreference(film){
-    setFilm((oldFilms) => (
+    setFilms((oldFilms) => (
       oldFilms.map((f)=>(f.ID === Number(film.ID) ? new Film (film.ID, f.Title, (!f.isFavorite), (film.Date===undefined)?undefined:film.Date, f.Rating): f))
       
       ));
   }
   function changeRating(id, newRating){
-    setFilm((oldFilms) => (
+    setFilms((oldFilms) => (
       oldFilms.map((f)=>(f.ID === Number(id) ? new Film (f.ID, f.Title, f.isFavorite, f.Date, newRating): f))
     ));
     
   }
 
-  */
+  
   return <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<FilmTable films={films} changeRating={changeRating} deleteFilm={deleteFilm}/>}/>
+        <Route index element={<FilmTable films={films} setFilms={setFilms} changeRating={changeRating} changePreference={changePreference} deleteFilm={deleteFilm}/>}/>
         <Route path='/filter/:filterName'
-          element={<FilmTable films={films} changeRating={changeRating} deleteFilm={deleteFilm}/>}/>
+          element={<FilmTable films={films} setFilms={setFilms} changeRating={changeRating} changePreference={changePreference} deleteFilm={deleteFilm}/>}/>
         <Route path='/edit/:id'
           element={<AddOrEdit films={films} handleAdd={handleAdd} handleSave={handleSave} />}/>
         <Route path='/addfilm'
