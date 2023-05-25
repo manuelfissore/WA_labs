@@ -20,7 +20,7 @@ function AddOrEdit(props){
     const [name, setName] = useState((!(id===undefined))?film.Title:'');
     const [favorite, setFavorite] = useState((!(id===undefined))?film.isFavorite:false);
     const [rating, setRating] = useState((!(id===undefined))?film.Rating:0);
-    const [date, setDate] = useState((!(id===undefined))?dayjs(film.Date).format('YYYY-MM-DD'):dayjs().format('YYYY-MM-DD'));
+    const [date, setDate] = useState((!(id===undefined))?dayjs(film.Date).format('YYYY-MM-DD'):null);
     const [error, setError] = useState(false);
 
     function handleAdd(){
@@ -32,6 +32,7 @@ function AddOrEdit(props){
         }
         else{
             setError(false)
+            console.log("in handle is" + date)
             props.handleAdd(new Film(null, name, favorite, date, rating));
             navigate('/');
         }
@@ -55,7 +56,6 @@ function AddOrEdit(props){
     function handleCancel(){
         navigate('/');
     }
-
     return <Table>
         <tbody>
             <tr>
@@ -93,9 +93,9 @@ function AddOrEdit(props){
                     <Row>
                         <Form.Group controlId="isFavorite">
                             <Col sm="4">
-                            {id===undefined&& <Form.Check type="checkbox" onChange={(ev)=>{setFavorite(ev.target.value)}} label='Is one of your favorite?' name="fav"/>}
-                            {!(id===undefined)  && (favorite==true || favorite=='on') && <Form.Check type="checkbox"  label='Is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}} name="fav" checked></Form.Check>}
-                            {!(id===undefined)  && !(favorite==true || favorite=='on') && <Form.Check type="checkbox" label='Is one of your favorite?' onChange={(ev)=>{setFavorite(ev.target.value)}}  name="fav"></Form.Check>}
+                            {id===undefined&& <Form.Check type="checkbox" onChange={(ev)=>{setFavorite((ev.target.value=='on')?1:0)}} label='Is one of your favorite?' name="fav"/>}
+                            {!(id===undefined)  && (favorite==true || favorite=='on') && <Form.Check type="checkbox"  label='Is one of your favorite?' onChange={(ev)=>{setFavorite((ev.target.value=='on')?1:0)}} name="fav" checked></Form.Check>}
+                            {!(id===undefined)  && !(favorite==true || favorite=='on') && <Form.Check type="checkbox" label='Is one of your favorite?' onChange={(ev)=>{setFavorite((ev.target.value=='on')?1:0)}}  name="fav"></Form.Check>}
                             </Col>
                         </Form.Group>
                     </Row>

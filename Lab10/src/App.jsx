@@ -23,6 +23,7 @@ function App() {
       setFilms(list);
       setLoading(false) ;
     })
+    //console.log(films);
   }, [loading]);
 
   function handleDelete(id) {

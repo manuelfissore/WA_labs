@@ -17,7 +17,6 @@ import {listFilteredFilm } from '../API';
 
 function FilmTable(props) {
     const {filterName} =  useParams();
-    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
         // load the list of questions from the API server
@@ -25,7 +24,6 @@ function FilmTable(props) {
         if(filterName!=undefined)
             listFilteredFilm(filterName).then((list) => {
                 props.setFilms(list);
-                setLoading(false) ;
             })
       }, [filterName]);
 
@@ -83,7 +81,7 @@ function FilmRow(props){
         <tr>
             <td>{props.film.Title}</td>
             <td><DisplayFav film={props.film} handleChangePreference={props.handleChangePreference}/> </td>
-            <td>{((props.film.Date=='Invalid Date')||(props.film.Date=='undefined')||(props.film.Date===undefined)||isNaN(props.film.Date))?' ':(dayjs(props.film.Date).format('YYYY/MM/DD'))}</td>
+            <td>{(props.film.Date===null)?' ':(dayjs(props.film.Date).format('YYYY/MM/DD'))}</td>
             <td>{<StarRating film={props.film} changeRating={props.changeRating}/>}</td>
             <td><Button variant='primary' className='button-del-edit' onClick={()=>{navigate(`/edit/${props.film.ID}`)}}>{<PencilSquare/>}</Button></td>
             <td><Button variant='warning' onClick={()=>{props.handleDelete(props.film.ID)}}>{<Trash/>}</Button></td>

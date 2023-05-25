@@ -1,5 +1,3 @@
-import { Film } from "./film.js";
-
 const APIURL = 'http://localhost:3000/api'
 
 async function listFilm() {
@@ -36,6 +34,7 @@ async function listFilteredFilm(filter) {
 
 async function addFilm(film) {
     try {
+        console.log(film)
         const response = await fetch(APIURL+`/films`,{
             method: 'POST',
             headers: {
